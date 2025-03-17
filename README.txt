@@ -2,7 +2,7 @@
    Có thể kiểm tra = bước 1.
 0. Tải một số thứ (từ sau không cần tải nữa). Vào cmd, ghi:
 
-pip install rich keyboard playsound==1.2.2
+pip install rich playsound==1.2.2
 
 Nếu tải thành công, start from here:
 
