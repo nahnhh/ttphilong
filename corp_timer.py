@@ -9,10 +9,6 @@ soundfile = Path(__file__).parent / 'harp.mp3' # replace with your sound
 soundfile = str(soundfile)
 console = Console()
 
-def stop_after(sleep_interval):
-  time.sleep(sleep_interval)
-  console.print("STOP! YOU GO.", style="bold red")
-
 def inputs():
   global total_time, avg_time, r_min, r_max, presenters
   total_time = int(input("Total time (in minutes, default = 20): ") or 20)
@@ -20,7 +16,7 @@ def inputs():
   presenters = list(presenter for presenter in presenters.split(' '))
 
   rand_ko = input("Random order? [Y/n]: ")
-  if rand_ko == '' or 'y' or 'Y':
+  if (rand_ko == '') or (rand_ko.lower() == 'y'):
     random.shuffle(presenters)
   avg_time = total_time / len(presenters) * 60
   r_min, r_max = -avg_time/4, avg_time/4
@@ -34,22 +30,25 @@ def inputs():
   console.print("NOW.", style="bold yellow")
   print()
 
+def stop_after(sleep_interval):
+  time.sleep(sleep_interval)
+  console.print("STOP! YOU GO.", style="bold red")
 
 def main():
   inputs()
   time_left = total_time * 60
   for i, p in enumerate(presenters):
-    console.print(f'{p.upper()}, YOU PRESENT.', style="bold yellow")
-    playsound(soundfile)
-    sleep_interval = avg_time + random.uniform(r_min, r_max)
-    
     if i < len(presenters) - 1:
+      sleep_interval = avg_time + random.uniform(r_min, r_max)
       time_left = time_left - sleep_interval
+      console.print(f'{p.upper()}, YOU PRESENT.', style="bold yellow")
+      playsound(soundfile)
       console.print(f"{p.upper()} will present for {sleep_interval/60:.2f} minutes ({time_left/60:.2f} minutes left)", style="bold blue")
       stop_after(sleep_interval)
+
     else: # last presenter
       sleep_interval = time_left + random.uniform(-(time_left/32), time_left/8)
-      console.print(f"{p.upper()} is the last to present for {sleep_interval/60:.2f} minutes (end of time)", style="bold blue")
+      console.print(f"{p.upper()} is the last to present for {sleep_interval/60:.2f} minutes (until end)", style="bold blue")
       stop_after(sleep_interval)
 
   playsound(soundfile)
